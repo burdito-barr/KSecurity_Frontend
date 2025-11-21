@@ -1,0 +1,194 @@
+
+#validar * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  color: #ffffff;
+}
+
+
+#validar {
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+  padding: 60px 40px 40px;
+}
+
+#validar .boton-salir {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #0a1931;
+  border: none;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 20;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#validar .boton-salir:hover {
+  background-color: #0b5fa5;
+  transform: scale(1.05);
+}
+
+
+#validar .container {
+  background-color: #1a3d63;
+  border-radius: 36px;
+  box-shadow: 0 12px 30px rgba(10, 25, 49, 0.5);
+  position: relative;
+  width: 520px;
+  max-width: 95%;
+  min-height: 500px;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+
+#validar .logo {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 25px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  object-fit: contain;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Título */
+#validar .titulo {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  letter-spacing: 0.5px;
+}
+
+/* Inputs */
+#validar .input-field {
+  background-color: #4a7fa7;
+  border: none;
+  margin: 12px 0;
+  padding: 16px 24px;
+  font-size: 16px;
+  border-radius: 12px;
+  width: 100%;
+  outline: none;
+  color: #ffffff;
+}
+
+#validar .input-field::placeholder {
+  color: #f0f0f0;
+  opacity: 0.9;
+}
+
+/* Botón Validar */
+#validar .boton-enter {
+  background-color: #0a1931;
+  border: none;
+  padding: 16px 24px;
+  font-size: 16px;
+  border-radius: 12px;
+  margin-top: 25px;
+  width: 100%;
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 10px rgba(10, 25, 49, 0.4);
+  transition: all 0.3s ease;
+}
+
+#validar .boton-enter:hover {
+  background-color: #154e6b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(10, 25, 49, 0.5);
+  cursor: pointer;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  #validar .boton-salir {
+    width: 44px;
+    height: 44px;
+    top: 20px;
+    left: 20px;
+    font-size: 1.6rem;
+  }
+
+  #validar .container {
+    width: 95%;
+    min-height: 450px;
+    padding: 40px 30px;
+    border-radius: 30px;
+  }
+
+  #validar .titulo {
+    font-size: 1.7rem;
+  }
+
+  #validar .logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  #validar .input-field,
+  #validar .boton-enter {
+    padding: 14px 20px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  #validar .boton-salir {
+    width: 40px;
+    height: 40px;
+    top: 15px;
+    left: 15px;
+    font-size: 1.4rem;
+  }
+
+  #validar .container {
+    min-height: 420px;
+    padding: 35px 25px;
+    border-radius: 28px;
+  }
+
+  #validar .titulo {
+    font-size: 1.5rem;
+  }
+
+  #validar .logo {
+    width: 90px;
+    height: 90px;
+  }
+
+  #validar .input-field,
+  #validar .boton-enter {
+    font-size: 14px;
+    padding: 12px 18px;
+    border-radius: 8px;
+  }
+}

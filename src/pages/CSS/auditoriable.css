@@ -1,0 +1,304 @@
+
+#auditoriale {
+  --bg-dark: #0a1931;
+  --bg-dark-light: #1a3d63;
+  --accent: #4a7fa7;
+  --accent-light: #b3cfe5;
+  --white-soft: #f6fafd;
+  --low: #ffc400;
+  --warning: #f17c0f;
+  --danger: #e74c3c;
+  --success: #2ecc71;
+  --inconclusive: #95a5a6;
+
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--white-soft);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+}
+
+
+#auditoriale  .sidebar {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  top: 0;
+  left: -240px;
+  background-color: #0a1931;
+  transition: 0.3s;
+  padding-top: 50px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+#auditoriale  .sidebar.active {
+  left: 0;
+}
+
+#auditoriale  .sidebar .logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+#auditoriale  .sidebar a {
+  padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #f6fafd;
+  display: block;
+  transition: 0.3s;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#auditoriale  .sidebar a:hover {
+  background-color: #1a3d63;
+}
+
+/* Botón abrir sidebar */
+#auditoriale  .open-btn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #0a1931;
+  color: #f6fafd;
+  padding: 10px 15px;
+  border: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#auditoriale  .open-btn:hover {
+  background-color: #1a3d63;
+}
+
+#auditoriale  .open-btn.hide-btn {
+  display: none;
+}
+
+#auditoriale  .main-content {
+  position: fixed;       /* fija al viewport */
+  top: 0;
+  left: 0;
+  right: 0;              /* ocupa todo el ancho de la pantalla */
+  bottom: 0;
+  padding: 2rem;
+  overflow-y: scroll;    /* scroll vertical */
+  overflow-x: hidden;
+  box-sizing: border-box;
+  z-index: 1;            /* detrás del sidebar */
+  transition: none;      /* sidebar no empuja el contenido */
+}
+
+#auditoriale .sidebar.active ~ .main-content {
+  margin-left: 250px;
+}
+
+
+/* =======================
+   MAIN CONTENT
+======================= */
+#auditoriale .main-content {
+  flex: 1;
+  margin-left: 0;
+  padding: 2rem 3rem;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+
+#auditoriale .sidebar.active ~ .main-content {
+  margin-left: 240px;
+}
+
+/* =======================
+   HEADER
+======================= */
+#auditoriale .header {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: fadeIn 0.4s ease;
+}
+
+#auditoriale .header .logocentral {
+  width: 70px;
+  margin-bottom: 0.8rem;
+  opacity: 0.85;
+}
+
+#auditoriale .header h1 {
+  font-size: 2.2rem;
+  color: var(--white-soft);
+}
+
+#auditoriale .header p {
+  color: var(--bg-dark-light);
+  margin-top: 0.4rem;
+}
+
+/* =======================
+   FILTROS
+======================= */
+#auditoriale .filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1.5rem 0 2rem 0;
+}
+
+#auditoriale .filters button {
+  background-color: var(--bg-dark-light);
+  color: var(--white-soft);
+  border: 1px solid var(--accent);
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+#auditoriale .filters button:hover,
+#auditoriale .filters button.active {
+  background-color: var(--accent);
+  color: var(--bg-dark);
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
+/* =======================
+   LOGS
+======================= */
+#auditoriale .logs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 900px;
+  margin: 0 auto 3rem auto;
+}
+
+#auditoriale .log-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  background-color: var(--bg-dark-light);
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  align-items: flex-start;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#auditoriale .log-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(74, 127, 167, 0.4);
+}
+
+#auditoriale .log-icon {
+  font-size: 1.5rem;
+  color: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+}
+
+#auditoriale .log-content {
+  flex: 1;
+}
+
+#auditoriale .log-content p {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+#auditoriale .log-content strong {
+  color: var(--accent-light);
+}
+
+#auditoriale .target {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+#auditoriale .timestamp {
+  display: block;
+  color: var(--inconclusive);
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+}
+
+#auditoriale .empty {
+  text-align: center;
+  color: var(--inconclusive);
+  font-style: italic;
+  padding: 2rem;
+}
+
+/* Iconos pequeños + y - junto a camera */
+#auditoriale .mini {
+  width: 14px;
+  height: 14px;
+  margin-left: -5px;
+  margin-bottom: 18px;
+}
+
+
+
+/* =======================
+   OVERLAY
+======================= */
+#auditoriale .overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+
+/* =======================
+   ANIMACIONES
+======================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =======================
+   RESPONSIVE
+======================= */
+@media (max-width: 800px) {
+  #auditoriale .main-content {
+    padding: 1.5rem;
+  }
+  #auditoriale .header h1 {
+    font-size: 1.7rem;
+  }
+  #auditoriale .log-item {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  #auditoriale .sidebar {
+    width: 200px;
+  }
+  #auditoriale .sidebar.active ~ .main-content {
+    margin-left: 200px;
+  }
+}

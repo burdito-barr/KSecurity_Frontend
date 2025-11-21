@@ -1,0 +1,143 @@
+/* === CONTENEDOR GENERAL: ARRIBA DERECHA & STACK === */
+#alerta {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 99999;
+}
+
+/* === CONTENEDOR TARJETA (transición entrada/salida para apilar) === */
+#alerta .alerta-card-container {
+  opacity: 0;
+  transform: translateY(-15px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+#alerta .alerta-card-container.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* === TARJETA BASE (TU DISEÑO ORIGINAL) === */
+#alerta .alerta-card {
+  width: 420px;
+  min-height: 180px;
+  border-radius: 18px;
+  padding: 1.5rem;
+  position: relative;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: flash-alert 1.2s infinite alternate;
+}
+
+#alerta .alerta-card:hover {
+  transform: scale(1.03);
+}
+
+/* === COLORES SEGÚN URGENCIA === */
+#alerta .alerta-card.baja {
+  background: linear-gradient(145deg, #c59908, #ffce52);
+  color: #000;
+}
+
+#alerta .alerta-card.media {
+  background: linear-gradient(145deg, #fb923c, #f97316);
+}
+
+#alerta .alerta-card.alta {
+  background: linear-gradient(145deg, #ef4444, #dc2626);
+}
+
+/* === EFECTO DE PARPADEO — ORIGINAL === */
+@keyframes flash-alert {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 255, 255, 1);
+    opacity: 0.8;
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    opacity: 1;
+  }
+}
+
+/* === CONTENIDO === */
+#alerta .alerta-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+#alerta .alerta-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+#alerta .alerta-link {
+  margin-top: 0.6rem;
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  transition: opacity 0.3s;
+}
+
+#alerta .alerta-link:hover {
+  opacity: 0.8;
+}
+
+/* === BOTÓN CERRAR === */
+#alerta .alerta-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.8rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  line-height: 30px;
+  text-align: center;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+#alerta .alerta-close:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 480px) {
+  #alerta {
+    right: 0.5rem;
+    left: 0.5rem;
+  }
+  #alerta .alerta-card {
+    width: 100%;
+    font-size: 0.95rem;
+    min-height: 150px;
+    padding: 1rem;
+  }
+  #alerta .alerta-title {
+    font-size: 1.2rem;
+  }
+}

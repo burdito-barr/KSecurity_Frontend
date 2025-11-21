@@ -1,0 +1,447 @@
+/* Modo oscuro permanente - base */
+#permisos {
+  min-height: 100vh;
+  color: #f6fafd;
+  font-family: 'Inter', sans-serif;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE10+/Edge */
+  user-select: none;         /* Standard */
+  cursor: default;
+}
+
+/* Overlay para cerrar sidebar */
+#permisos .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Sidebar */
+#permisos .sidebar {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  top: 0;
+  left: -240px;
+  background-color: #0a1931;
+  transition: 0.3s;
+  padding-top: 50px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+#permisos .sidebar.active {
+  left: 0;
+}
+
+#permisos .sidebar .logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+#permisos .sidebar a {
+  padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #f6fafd;
+  display: block;
+  transition: 0.3s;
+  border-radius: 6px;
+  cursor: pointer; 
+}
+
+#permisos .sidebar a:hover {
+  background-color: #1a3d63;
+}
+
+/* Botón sidebar */
+#permisos .open-btn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #0a1931;
+  color: #f6fafd;
+  padding: 10px 15px;
+  border: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-family: 'Inter', sans-serif;
+}
+
+#permisos .open-btn:hover {
+  background-color: #1a3d63;
+}
+
+#permisos .open-btn.hide-btn {
+  display: none;
+}
+
+/* Header */
+#permisos .header {
+ padding: 1rem 0;
+}
+
+#permisos .logo-central {
+  height: 3rem;
+  width: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Main Content */
+#permisos .main-content {
+  max-width: 100%;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+/* Typography */
+#permisos .text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+#permisos .font-bold {
+  font-weight: 700;
+}
+
+#permisos .mb-8 {
+  margin-bottom: 2rem;
+}
+
+#permisos .mb-4 {
+  margin-bottom: 1rem;
+}
+
+#permisos .text-center {
+  text-align: center;
+}
+
+#permisos .flex {
+  display: flex;
+}
+
+#permisos .items-center {
+  align-items: center;
+}
+
+#permisos .justify-center {
+  justify-content: center;
+}
+
+#permisos .gap-3 {
+  gap: 0.75rem;
+}
+
+#permisos .gap-4 {
+  gap: 1rem;
+}
+
+#permisos .gap-2 {
+  gap: 0.5rem;
+}
+
+/* Stats Cards */
+#permisos .grid {
+  display: grid;
+}
+
+#permisos .grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+#permisos .md\:grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+#permisos .gap-6 {
+  gap: 1.5rem;
+}
+
+#permisos .card-estado {
+  background-color: #1a3d63;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  border: 1px solid #b3cfe5;
+  cursor: pointer;
+  transition: transform 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+#permisos .card-estado:hover {
+  transform: translateY(-2px);
+}
+
+#permisos .card-estado.estado-pendiente {
+  background-color:  #f17c0f;
+}
+
+#permisos .card-estado.estado-aprobada {
+  background-color: #2ecc71; 
+}
+
+#permisos .card-estado.estado-rechazada {
+  background-color:  #e74c3c;
+}
+
+#permisos .icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Success Alert */
+#permisos .alert-success {
+  background-color: #2ecc71; 
+  color: #f6fafd;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #b3cfe5;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Solicitudes Container */
+#permisos .solicitudes-container {
+  background-color: #1a3d63;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #b3cfe5;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+#permisos .solicitudes-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#permisos .solicitudes-container th,
+#permisos .solicitudes-container td {
+  padding: 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #b3cfe5;
+}
+
+#permisos .solicitudes-container th {
+  background-color: #0a1931;
+  color: #f6fafd;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'Inter', sans-serif;
+}
+
+#permisos .solicitudes-container tbody tr:last-child td {
+  border-bottom: none;
+}
+
+#permisos .solicitudes-container td {
+  color: #f6fafd;
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Estado badges */
+#permisos .estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+}
+
+#permisos .estado-pendiente {
+  background-color: #f17c0f;
+  color: #f6fafd;
+}
+
+#permisos .estado-aprobada {
+  background-color:  #2ecc71; 
+  color: #f6fafd;
+}
+
+#permisos .estado-rechazada {
+  background-color: #e74c3c;
+  color: #f6fafd;
+}
+
+/* Rol badges */
+#permisos .rol-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+}
+
+#permisos .rol-badge.admin {
+  background-color:#0a1931;
+  color: #f6fafd;
+}
+
+#permisos .rol-badge.colaborador {
+  background-color: #4a7fa7;
+  color: #f6fafd;
+}
+
+/* Code styling */
+#permisos code {
+  background-color: #0a1931;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #f6fafd;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* Botón eliminar */
+#permisos .btn-eliminar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #f87171;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+#permisos .btn-eliminar:hover {
+  background-color: #2ecc71;
+  color: #fecaca;
+  transform: scale(1.1);
+}
+
+#permisos .btn-eliminar svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Action buttons */
+#permisos .btn-aprobar,
+#permisos .btn-rechazar,
+#permisos .btn-reenviar {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+#permisos .btn-aprobar {
+  background-color: #2ecc71;
+  color: #f6fafd;
+}
+
+#permisos .btn-aprobar:hover {
+  background-color: #26a95d;
+}
+
+#permisos .btn-rechazar {
+  background-color:  #e74c3c;
+  color: #f6fafd;
+}
+
+#permisos .btn-rechazar:hover {
+  background-color:  #bd4032;
+}
+
+#permisos .btn-reenviar {
+  background-color: #1a3d63;
+  color: #f6fafd;
+}
+
+#permisos .btn-reenviar:hover {
+  background-color: #2a5d8c;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #permisos .main-content {
+    padding: 0 1rem;
+    margin: 1rem auto;
+  }
+
+  #permisos .md\:grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #permisos .text-4xl {
+    font-size: 1.875rem;
+  }
+
+  #permisos .solicitudes-container table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  #permisos .solicitudes-container th,
+  #permisos .solicitudes-container td {
+    padding: 0.75rem;
+  }
+
+  #permisos .open-btn {
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #permisos .md\:grid-cols-4 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  #permisos .gap-3 {
+    gap: 0.5rem;
+  }
+
+  #permisos .text-4xl {
+    font-size: 1.5rem;
+  }
+
+  #permisos .flex.items-center {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,603 @@
+/* reportes.css */
+
+:root {
+  --bg-dark: #0a1931;
+  --bg-dark-light: #1a3d63;
+  --accent: #4a7fa7;
+  --accent-light: #b3cfe5;
+  --white-soft: #f6fafd;
+
+  --low: #ffc400;
+  --warning: #f17c0f;
+  --danger: #e74c3c;
+  --success: #2ecc71; 
+  --inconclusive: #95a5a6;
+}
+
+.reportes-container {
+  background-color: var(--bg-dark);
+  color: var(--white-soft);
+  min-height: 100vh;
+  display: flex;
+  position: relative;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Sidebar */
+#reportes  .sidebar {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  top: 0;
+  left: -240px;
+  background-color: #0a1931;
+  transition: 0.3s;
+  padding-top: 50px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+#reportes .sidebar.active {
+  left: 0;
+}
+
+#reportes .sidebar .logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: block;
+  
+}
+
+#reportes .sidebar a {
+   padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #f6fafd;
+  display: block;
+  transition: 0.3s;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#reportes .sidebar a:hover {
+  background-color: var(--bg-dark-light);
+}
+
+/* Botón abrir sidebar */
+#reportes .open-btn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: var(--bg-dark);
+  color: var(--white-soft);
+  padding: 10px 15px;
+  border: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#reportes .open-btn:hover {
+
+  background-color: #1a3d63;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+}
+
+
+#reportes .open-btn.hide-btn {
+  display: none;
+}
+
+/* Overlay */
+#reportes .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* Main Content */
+#reportes .main-content {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2rem;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  z-index: 1;
+  transition: none;
+}
+
+#reportes .sidebar.active ~ .main-content {
+  margin-left: 250px;
+}
+
+/* Layout principal */
+#reportes .content-wrapper {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+#reportes .grid-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+/* Panel izquierdo: Reportes */
+#reportes .report-panel {
+  background-color: var(--bg-dark-light);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+
+/* Listado de reportes */
+#reportes .report-list h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 20px;
+  color: var(--white-soft);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 5px;
+}
+
+#reportes .report-items {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#reportes .report-item {
+  background-color: var(--bg-dark);
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#reportes .report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+#reportes .report-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--white-soft);
+}
+
+#reportes .report-actions button {
+  background: none;
+  border: none;
+  color: var(--white-soft);
+  cursor: pointer;
+  padding: 5px;
+  margin-left: 5px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+#reportes .report-actions button:hover {
+  opacity: 1;
+}
+
+#reportes .report-actions button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* Nivel de Violencia */
+#reportes .violence-section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#reportes .violence-section label {
+  font-size: 12px;
+  color: var(--white-soft);
+  opacity: 0.8;
+}
+
+#reportes .violence-bar-bg {
+  height: 6px;
+  background-color: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+#reportes .violence-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.violence-alta {
+  background-color: var(--danger);
+}
+
+.violence-media {
+  background-color: var(--warning);
+}
+
+.violence-baja {
+  background-color: var(--low);
+}
+
+#reportes .violence-section span {
+  font-size: 14px;
+  color: var(--white-soft);
+  font-weight: bold;
+}
+
+/* Urgencia y Estado */
+
+
+#reportes .urgency-status-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#reportes .urgency-block,
+#reportes .status-block {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#reportes .urgency-block label,
+#reportes .status-block label {
+  font-size: 12px;
+  color: var(--);
+  opacity: 0.8;
+}
+
+#reportes .badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+}
+
+.urgencia-alta {
+  background-color: var(--danger);
+}
+
+.urgencia-media {
+  background-color: var(--warning);
+  color: #000;
+}
+
+.urgencia-baja {
+  background-color: var(--low);
+}
+
+.status-resuelto {
+  background-color: var(--success);
+}
+
+.status-esperando {
+  background-color: var(--danger);
+}
+
+.status-inconcluso {
+  background-color: var(--inconclusive);
+}
+.status-enproceso{
+  background-color: var(--low);
+}
+
+/* Información de fecha y ubicación */
+#reportes .report-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+#reportes .date-time,
+#reportes .location-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--white-soft);
+}
+
+#reportes .date-time svg,
+#reportes .location-info svg {
+  color: var(--accent-light);
+}
+
+/* Descripción */
+#reportes .report-description {
+  margin: 10px 0;
+}
+
+#reportes .report-description label {
+  font-size: 12px;
+  color: var(--white-soft);
+  opacity: 0.8;
+  display: block;
+  margin-bottom: 5px;
+}
+
+#reportes .report-description p {
+  margin: 0;
+  line-height: 1.4;
+  color: var(--white-soft);
+  font-size: 14px;
+}
+
+/* Botón "Ver Detalles" */
+#reportes .btn-view-details {
+  width: 100%;
+  background-color: var(--accent);
+  color: var(--bg-dark);
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+#reportes .btn-view-details:hover {
+  background-color: var(--accent-light);
+  color: var(--bg-dark);
+}
+
+/* Panel derecho: Análisis */
+#reportes .stats-panel {
+  background-color: var(--bg-dark-light);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+ 
+}
+
+#reportes .stats-box {
+  background-color: var(--bg-dark);
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#reportes .stats-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#reportes .stats-header .logo-reportes {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+#reportes .stats-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--white-soft);
+}
+
+#reportes .stats-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#reportes .summary-item {
+  text-align: center;
+  padding: 10px;
+  background-color: rgba(255,255,255,0.05);
+  border-radius: 6px;
+}
+
+#reportes .summary-item .number {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--accent-light);
+  margin-bottom: 5px;
+}
+
+#reportes .summary-item .label {
+  font-size: 12px;
+  color: var(--white-soft);
+  opacity: 0.8;
+}
+
+/* Ajustes generales */
+#reportes .content-wrapper {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  #reportes .grid-layout {
+    grid-template-columns: 1fr;
+  }
+
+  #reportes .report-panel,
+  #reportes .stats-panel {
+    margin-bottom: 20px;
+  }
+
+  #reportes .stats-summary {
+    grid-template-columns: 1fr;
+  }
+}
+/* === FILTROS DE URGENCIA Y ESTADO === */
+#reportes .filters-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 1.8rem;
+  background-color: var(--bg-dark);
+  padding: 15px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+#reportes .filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  min-width: 220px;
+}
+
+#reportes .filter-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white-soft);
+  opacity: 0.9;
+  letter-spacing: 0.5px;
+}
+
+/* === SELECTS ESTILIZADOS === */
+#reportes .status-select {
+  background-color: var(--bg-dark-light);
+  color: var(--white-soft);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 200;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  appearance: none;
+  outline: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--accent-light) 50%),
+    linear-gradient(135deg, var(--accent-light) 50%, transparent 50%);
+  background-position: calc(100% - 15px) calc(50% - 3px),
+    calc(100% - 10px) calc(50% - 3px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+#reportes .status-select:hover {
+  background-color: var(--accent);
+  color: var(--bg-dark);
+  transform: scale(1.02);
+}
+
+
+/* === OPCIONES INTERNAS DE SELECT === */
+#reportes .status-select option {
+  background-color: var(--bg-dark);
+  color: var(--white-soft);
+  font-weight: 100;
+  padding: 10px;
+}
+
+/* === ESTILOS DE ESTATUS Y URGENCIA EN LAS TARJETAS === */
+#reportes .urgency-status-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+#reportes .urgency-block,
+#reportes .status-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#reportes .urgency-block label,
+#reportes .status-block label {
+  font-size: 12px;
+  color: var(--white-soft);
+  opacity: 0.8;
+  font-weight: 600;
+}
+
+#reportes .badge {
+  padding: 5px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* === URGENCIA === */
+.urgencia-alta {
+  background-color: var(--danger);
+}
+
+.urgencia-media {
+  background-color: var(--warning);
+  color: #000;
+}
+
+.urgencia-baja {
+  background-color: var(--low);
+  color: #000;
+}
+
+/* === STATUS === */
+.status-esperando {
+  background-color: var(--danger);
+}
+
+.status-enproceso {
+  background-color: var(--low);
+  color: #000;
+}
+
+.status-inconcluso {
+  background-color: var(--inconclusive);
+}
+
+.status-resuelto {
+  background-color: var(--success);
+}
+
+/* === ADAPTACIÓN RESPONSIVA === */
+@media (max-width: 768px) {
+  #reportes .filters-section {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  #reportes .filter-group {
+    min-width: 100%;
+  }
+}

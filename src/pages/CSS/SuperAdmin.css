@@ -1,0 +1,214 @@
+/* Reset y tipografía */
+#super-admin * {
+  margin-top: 20;
+  padding: 20;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+  cursor: default; /* Establece cursor por defecto en todos los elementos */
+}
+
+#super-admin {
+  min-height: 100vh;
+  color: #f6fafd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE10+/Edge */
+  user-select: none;         /* Standard */
+}
+
+/* Encapsulador del logo */
+#super-admin .logo-central {
+  width: 90px;
+  height: 90px;
+  background-color: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;                /* hacer container flex */
+  align-items: center;          /* alinear verticalmente */
+  justify-content: center;      /* alinear horizontalmente */
+  border: 2px solid rgba(255,255,255,0.2);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+/* Imagen dentro */
+#super-admin .logo-central img {
+  max-width: 100%;   /* limita al tamaño del contenedor */
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center center;
+  display: block;    /* evita espacios extra */
+}
+
+
+/* Sidebar */
+#super-admin .sidebar {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  top: 0;
+  left: -240px;
+  background-color: #0a1931;
+  transition: 0.3s;
+  padding-top: 50px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+#super-admin .sidebar.active {
+  left: 0;
+}
+
+#super-admin .sidebar .logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+#super-admin .sidebar a {
+  padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #f6fafd;
+  display: block;
+  transition: 0.3s;
+  border-radius: 6px;
+  cursor: pointer; /* Cursor de mano para enlaces del sidebar */
+}
+
+#super-admin .sidebar a:hover {
+  background-color: #1a3d63;
+}
+
+/* Botón abrir sidebar */
+#super-admin .open-btn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #0a1931;
+  color: #f6fafd;
+  padding: 10px 15px;
+  border: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#super-admin .open-btn:hover {
+  background-color: #1a3d63;
+}
+
+#super-admin .open-btn.hide-btn {
+  display: none;
+}
+
+/* Contenedor de tarjetas */
+#super-admin .funciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+/* Tarjeta */
+#super-admin .card {
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  background-color: #1a3d63;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  font-family: 'Montserrat', sans-serif;
+  flex: 0 0 300px; /* asegura ancho fijo */
+}
+
+/* Elemento que fuerza salto de línea */
+#super-admin .break-row {
+  flex-basis: 100%;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* Hover */
+#super-admin .card:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+}
+
+/* Ícono dentro de la tarjeta */
+#super-admin .card .icon-card {
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  object-fit: contain;
+  pointer-events: none;
+  transition: transform 0.4s ease;
+}
+
+#super-admin .card:hover .icon-card {
+  transform: scale(1.1);
+}
+
+/* Capa de overlay / degradado */
+#super-admin .card .layer {
+  background: linear-gradient(to top, #0a1931, rgba(0,0,0,0));
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#super-admin .card:hover .layer {
+  opacity: 1;
+}
+
+/* Texto / título dentro de la tarjeta */
+#super-admin .card .info {
+  position: absolute;
+  bottom: -50%;
+  width: 100%;
+  text-align: center;
+  padding: 15px;
+  opacity: 0;
+  transition: bottom 0.5s ease, opacity 0.7s ease;
+  color: #f6fafd;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.7);
+  font-family: 'Montserrat', sans-serif;
+}
+
+#super-admin .card:hover .info {
+  bottom: 20px;
+  opacity: 1;
+}
+
+#super-admin .card .info h1 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Efecto blur a tarjetas no seleccionadas */
+#super-admin .funciones:hover > .card:not(:hover) {
+  filter: blur(3px);
+  transition: 0.3s;
+}

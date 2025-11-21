@@ -1,0 +1,446 @@
+/* ==================== Base ==================== */
+#personal {
+  min-height: 100vh;
+  color: #f6fafd;
+  font-family: 'Inter', sans-serif;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  position: relative;
+}
+
+/* ==================== Overlay ==================== */
+#personal .overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, 0.5); /* si deseas oscurecer */
+}
+
+/* ==================== Sidebar ==================== */
+#personal .sidebar {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  top: 0;
+  left: -240px;
+  background-color: #0a1931;
+  transition: 0.3s;
+  padding-top: 50px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+#personal .sidebar.active {
+  left: 0;
+}
+
+#personal .sidebar .logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+#personal .sidebar a {
+  padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #f6fafd;
+  display: block;
+  transition: 0.3s;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#personal .sidebar a:hover {
+  background-color: #1a3d63;
+}
+
+/* Botón abrir menú */
+#personal .open-btn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #0a1931;
+  color: #f6fafd;
+  padding: 10px 15px;
+  border: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+#personal .open-btn:hover {
+  background-color: #1a3d63;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+}
+
+#personal .open-btn.hide-btn {
+  display: none;
+}
+
+/* ==================== Header ==================== */
+#personal .header {
+ padding: 1rem 0;
+}
+
+#personal .logo-central {
+  height: 60px; /* más pequeño */
+  width: auto;
+  display: block;
+  margin: 1.5rem auto;
+}
+
+/* Main Content */
+#permisos .main-content {
+  max-width: 100%;
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+
+/* Typography */
+#permisos .text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-family: 'Inter', sans-serif;
+}
+
+#permisos .font-bold {
+  font-weight: 700;
+}
+
+#permisos .mb-8 {
+  margin-bottom: 2rem;
+}
+
+#permisos .mb-4 {
+  margin-bottom: 1rem;
+}
+
+#permisos .text-center {
+  text-align: center;
+}
+
+#permisos .flex {
+  display: flex;
+}
+
+#permisos .items-center {
+  align-items: center;
+}
+
+#permisos .justify-center {
+  justify-content: center;
+}
+
+#permisos .gap-3 {
+  gap: 0.75rem;
+}
+
+#permisos .gap-4 {
+  gap: 1rem;
+}
+
+#permisos .gap-2 {
+  gap: 0.5rem;
+}
+
+
+/* ==================== Main Content ==================== */
+#personal .main-content {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+#personal .main-content.sidebar-open {
+  margin-left: 240px;
+}
+
+/* ==================== Controls ==================== */
+#personal .controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+#personal .controls input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.75rem;
+  background-color: #1a3d63;
+  color: #f6fafd;
+  font-size: 0.875rem;
+  border-radius: 6px;
+  border: 1px solid #4a7fa7;
+}
+
+#personal .controls input::placeholder {
+  color: #b3cfe5;
+}
+
+/* ==================== Botones unificados ==================== */
+#personal .controls button,
+#personal .actions button {
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #0a1931;
+  color: #f6fafd;
+  padding: 10px 15px;
+  border: 10px;
+  margin: 5px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  font-weight: 600;
+}
+
+#personal .controls button:hover,
+#personal .actions button:hover {
+  background-color: #1a3d63;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+}
+
+#personal .actions button.delete {
+  background-color: #b91c1c;
+}
+
+#personal .actions button.delete:hover {
+  background-color: #dc2626;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+}
+
+/* ==================== Tabla de usuarios ==================== */
+#personal .user-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #1a3d63;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+#personal .user-table-container th,
+#personal .user-table-container td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #4a7fa7;
+}
+
+#personal .user-table-container th {
+  background-color: #0a1931;
+  color: #f6fafd;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+#personal .user-table-container tbody tr:hover {
+  background-color: #4a7fa7;
+}
+
+#personal .user-table-container td {
+  color: #f6fafd;
+  font-size: 0.875rem;
+}
+
+/* ==================== Estado ==================== */
+#personal .activo {
+  color: #34d399;
+  font-weight: 600;
+}
+
+#personal .inactivo {
+  color: #f87171;
+  font-weight: 600;
+}
+
+/* ==================== Modal ==================== */
+#personal .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+#personal .modal-content {
+  background-color: #1a3d63;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 400px;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+#personal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid #4a7fa7;
+}
+
+#personal .modal-header h2 {
+  color: #f6fafd;
+  margin: 1;
+  font-size: 1.25rem;
+}
+
+#personal .modal-header button {
+  background: none;
+  border: none;
+  color: #b3cfe5;
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: color 0.2s;
+}
+
+#personal .modal-header button:hover {
+  color: #f6fafd;
+}
+
+#personal .modal-content input,
+#personal .modal-content select,
+#personal .modal-content label {
+  width: 95%;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #4a7fa7;
+  background-color: #1a3d63;
+  color: #f6fafd;
+  font-size: 0.875rem;
+}
+
+#personal .modal-content input::placeholder {
+  color: #b3cfe5;
+}
+
+#personal .modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  padding: 1rem;
+}
+
+#personal .modal-actions button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  background: #0a1931;
+  color: #f6fafd;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+
+#personal .modal-actions button:hover {
+  background: #1a3d63;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.4);
+}
+
+/* ==================== Responsive ==================== */
+@media (max-width: 768px) {
+
+
+  #personal .controls {
+    flex-direction: column;
+  }
+
+  #personal .controls input {
+    min-width: auto;
+  }
+
+  #personal .user-table-container table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  #personal .modal-content {
+    width: 95%;
+    margin: 1rem;
+  }
+
+  #personal .open-btn {
+    top: 0.75rem;
+    left: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #personal .modal-header h2 {
+    font-size: 1.125rem;
+  }
+
+  #personal .modal-content form {
+    gap: 0.75rem;
+  }
+
+  #personal .modal-actions {
+    flex-direction: column;
+  }
+}
+/* ==================== Checkbox Activo/Inactivo ==================== */
+#personal .estado-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 6px;
+  padding: 0.5rem;
+  width: 95%;
+  margin: 0.5rem auto;
+}
+
+#personal .estado-container label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+  color: #f6fafd;
+}
+
+#personal .estado-container input[type="checkbox"] {
+  transform: scale(1.2);
+  accent-color: #4a7fa7;
+  cursor: pointer;
+}
+

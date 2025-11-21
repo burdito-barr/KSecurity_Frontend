@@ -1,0 +1,469 @@
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #0f172a; /* slate-900 */
+  color: #e2e8f0; /* slate-200 */
+  overflow-x: hidden;
+}
+
+/* --- Layout general --- */
+#camaras {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Sidebar */
+#camaras .sidebar {
+  height: 100%;
+  width: 240px;
+  position: fixed;
+  top: 0;
+  left: -240px;
+  background-color: #0a1931;
+  transition: 0.3s;
+  padding-top: 50px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+#camaras .sidebar.active {
+  left: 0;
+}
+
+#camaras .sidebar .logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  display: block;
+}
+
+#camaras .sidebar a {
+  padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #f6fafd;
+  display: block;
+  transition: 0.3s;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#camaras .sidebar a:hover {
+  background-color: #1a3d63;
+}
+
+/* Botón abrir sidebar */
+#camaras .open-btn {
+  font-size: 20px;
+  cursor: pointer;
+  background-color: #0a1931;
+  color: #f6fafd;
+  padding: 10px 15px;
+  border: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1001;
+  border-radius: 6px;
+  transition: 0.3s;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#camaras .open-btn:hover {
+  background-color: #1a3d63;
+}
+
+#camaras .open-btn.hide-btn {
+  display: none;
+}
+
+#camaras .main-content {
+  position: fixed;       /* fija al viewport */
+  top: 0;
+  left: 0;
+  right: 0;              /* ocupa todo el ancho de la pantalla */
+  bottom: 0;
+  padding: 2rem;
+  overflow-y: scroll;    /* scroll vertical */
+  overflow-x: hidden;
+  box-sizing: border-box;
+  z-index: 1;            /* detrás del sidebar */
+  transition: none;      /* sidebar no empuja el contenido */
+}
+
+#camaras .sidebar.active ~ .main-content {
+  margin-left: 250px;
+}
+
+/* Scroll personalizado */
+#camaras .main-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+#camaras .main-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#camaras .main-content::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* --- Header --- */
+#camaras .header-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+  margin-bottom: 2rem;
+}
+
+#camaras .title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #f8fafc;
+  text-align: center;
+}
+
+#camaras .logo-central {
+  height: 3rem; /* tamaño más pequeño */
+  width: auto;
+  display: block;
+  margin: 0 auto 1rem;
+}
+
+/* --- Registro central --- */
+#camaras .registro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 400px;
+  width: 90%;
+}
+
+/* --- Controles de cámara --- */
+#camaras .camera-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+#camaras .btn-add-camera {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #0f172a;
+  border: none;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+  margin: 0;
+  min-height: 40px;
+}
+
+#camaras .btn-add-camera:hover {
+  background-color: #1a3d63;
+}
+
+#camaras .search-input {
+  background-color: #0f172a;
+  border: none;
+  border-radius: 8px;
+  color: #e2e8f0;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  width: 200px;
+  max-width: 100%;
+  outline: none;
+  transition: background 0.3s ease;
+  min-height: 40px;
+}
+
+#camaras .search-input:focus {
+  background-color: #1e293b;
+}
+
+#camaras .area-select {
+  background-color: #0f172a;
+  border: none;
+  border-radius: 8px;
+  color: #e2e8f0;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  outline: none;
+  transition: background 0.3s ease;
+  min-height: 40px;
+}
+
+#camaras .area-select:hover,
+#camaras .area-select:focus {
+  background-color: #1e293b;
+}
+
+/* --- Stats --- */
+#camaras .stats-cards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+#camaras .card {
+  background-color: #1e293b;
+  padding: 1rem;
+  border-radius: 10px;
+  flex: 1;
+  min-width: 250px;
+}
+
+#camaras .card-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#camaras .card-label {
+  color: #cbd5e1;
+}
+
+#camaras .card-number {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+#camaras .icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#camaras .connected-icon-bg {
+  background-color: #22c55e33;
+}
+#camaras .disconnected-icon-bg {
+  background-color: #ef444433;
+}
+#camaras .total-icon-bg {
+  background-color: #3b82f633;
+}
+
+#camaras .card-icon {
+  color: #e2e8f0;
+  width: 22px;
+  height: 22px;
+}
+
+/* --- Grid de cámaras --- */
+#camaras .camera-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  #camaras .camera-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+#camaras .camera-card {
+  background-color: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 1rem;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#camaras .camera-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+#camaras .camera-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+#camaras .camera-title-flex {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#camaras .status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+#camaras .dot-connected {
+  background-color: #22c55e;
+}
+
+#camaras .dot-disconnected {
+  background-color: #ef4444;
+}
+
+#camaras .btn-remove-individual {
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+#camaras .btn-remove-individual:hover {
+  color: #f87171;
+}
+
+#camaras .camera-stream-box {
+  margin-top: 1rem;
+  border-radius: 8px;
+  background-color: #0f172a;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+#camaras .live-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: default;
+}
+
+#camaras .no-stream {
+  text-align: center;
+  color: #94a3b8;
+  cursor: default;
+}
+
+#camaras .alert-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 0.5rem;
+}
+
+#camaras .camera-footer {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+#camaras .footer-label {
+  font-weight: 600;
+}
+
+#camaras .footer-value {
+  color: #94a3b8;
+}
+
+/* --- Modal --- */
+#camaras .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+#camaras .modal {
+  background-color: #1e293b;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 400px;
+  max-width: 90%;
+}
+
+#camaras .modal h2 {
+  margin-bottom: 1rem;
+  color: #f8fafc;
+}
+
+#camaras .modal label {
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #cbd5e1;
+}
+
+#camaras .modal input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border: none;
+  border-radius: 6px;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+  cursor: text;
+}
+
+#camaras .modal-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+#camaras .btn-save,
+#camaras .btn-cancel {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#camaras .btn-save {
+  background-color: #22c55e;
+  color: white;
+}
+
+#camaras .btn-save:hover {
+  background-color: #16a34a;
+}
+
+#camaras .btn-cancel {
+  background-color: #ef4444;
+  color: white;
+}
+
+#camaras .btn-cancel:hover {
+  background-color: #dc2626;
+}
