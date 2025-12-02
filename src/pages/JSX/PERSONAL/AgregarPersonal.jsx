@@ -39,13 +39,7 @@ function AgregarPersonal({
             placeholder="Nombre"
             required
           />
-          <input
-            name="apellido"
-            value={formData.apellido}
-            onChange={handleFormChange}
-            placeholder="Apellido"
-            required
-          />
+
           <input
             name="correo"
             value={formData.correo}

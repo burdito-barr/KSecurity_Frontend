@@ -1,24 +1,50 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {Trash2, Camera, Plus, Minus,UserPlus, UserMinus, CheckCircle, XCircle, Ban, Info} from "lucide-react";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import "../../CSS/auditoriable.css";
+import api from "../../../api/axios";
 
 export default function Auditoriable() {
+
   const [sidebarActive, setSidebarActive] = useState(false);
   const sidebarRef = useRef(null);
+
   const [filter, setFilter] = useState("all");
+  const [logsData, setLogsData] = useState([]); 
 
-  const logsData = [
-    { id: 1, user: "Ana Martínez", action: "eliminó", target: "reporte #452", timestamp: "2025-11-04 14:22", type: "report-delete" },
-    { id: 2, user: "Carlos López", action: "agregó", target: "cámara 'Entrada Principal'", timestamp: "2025-11-04 15:10", type: "camera-add" },
-    { id: 3, user: "Sistema", action: "rechazó acceso a", target: "usuario: juan@empresa.com", timestamp: "2025-11-04 16:03", type: "access-denied" },
-    { id: 4, user: "María Gómez", action: "eliminó", target: "usuario: pedro@empresa.com", timestamp: "2025-11-04 16:45", type: "user-delete" },
-    { id: 5, user: "Admin", action: "concedió acceso a", target: "nuevo usuario: lucia@empresa.com", timestamp: "2025-11-05 09:12", type: "access-granted" },
-    { id: 6, user: "Roberto Díaz", action: "eliminó", target: "cámara 'Estacionamiento'", timestamp: "2025-11-05 10:00", type: "camera-remove" },
-    { id: 7, user: "Sistema", action: "eliminó", target: "reporte #489 (automático)", timestamp: "2025-11-05 11:30", type: "report-delete" },
-  ];
+  useEffect(() => {
+    cargarEventos();
+  }, []);
 
+  const cargarEventos = async () => {
+    try {
+      const response = await api.get("/events/list");
+
+      // Tu backend usa to_frontend()
+      setLogsData(response.data);
+
+    } catch (error) {
+      console.error("Error cargando eventos:", error);
+    }
+  };
+
+  const getFilteredEvents = async (type) => {
+    try {
+      if (type === "all") {
+        await cargarEventos();
+        return;
+      }
+
+      const response = await api.get(`/events/type/${type}`);
+      setLogsData(response.data);
+
+    } catch (error) {
+      console.error("Error filtrando eventos:", error);
+    }
+  };
+
+  // -------- ICONOS --------
   const iconMap = {
     "report-delete": <Trash2 />,
     "camera-add": <><Camera /><Plus className="mini"/></>,
@@ -32,15 +58,12 @@ export default function Auditoriable() {
 
   const getIcon = (type) => iconMap[type] || <Info />;
 
-  const filteredLogs = filter === "all"
-    ? logsData
-    : logsData.filter((log) => log.type.startsWith(filter));
-
   return (
     <div id="auditoriale">
       
       {/* Sidebar Btn */}
-      <button className={`open-btn ${sidebarActive ? "hide-btn" : ""}`} onClick={() => setSidebarActive(true)}>
+      <button className={`open-btn ${sidebarActive ? "hide-btn" : ""}`} 
+        onClick={() => setSidebarActive(true)}>
         ☰ Abrir Menú
       </button>
 
@@ -48,10 +71,10 @@ export default function Auditoriable() {
       <div ref={sidebarRef} className={`sidebar ${sidebarActive ? "active" : ""}`}>
         <img src={logo} className="logo" alt="logo" />
         <nav className="sidebar-nav">
-            <Link to="/colaborador">Inicio</Link>
-            <Link to="/camaras">Camaras</Link>
-            <Link to="/reportes">Reportes</Link>
-            <Link to="/">Salir de sesión</Link>
+          <Link to="/colaborador">Inicio</Link>
+          <Link to="/camaras">Cámaras</Link>
+          <Link to="/reportes">Reportes</Link>
+          <Link to="/">Cerrar sesión</Link>
         </nav>
       </div>
 
@@ -65,33 +88,45 @@ export default function Auditoriable() {
           <p>Acciones relevantes del sistema en tiempo real</p>
         </div>
 
+        {/* BOTONES FILTRO */}
         <div className="filters">
-          {["all","report","camera","user","access"].map((f)=>(
+          {["all","report","camera","user","access"].map((f)=>( 
             <button
               key={f}
               className={filter===f ? "active" : ""}
-              onClick={()=>setFilter(f)}
+              onClick={()=>{
+                setFilter(f);
+                getFilteredEvents(f);
+              }}
             >
               {f==="all" ? "All" : f.charAt(0).toUpperCase()+f.slice(1)}
             </button>
           ))}
         </div>
 
+        {/* REGISTROS */}
         <div className="logs">
-          {filteredLogs.length === 0 ? (
+          {logsData.length === 0 ? (
             <p className="empty">No hay registros que coincidan.</p>
-          ) : filteredLogs.map((log) => (
+          ) : logsData.map((log) => (
             <div className="log-item" key={log.id}>
               <div className="log-icon">{getIcon(log.type)}</div>
+
               <div className="log-content">
-                <p><strong>{log.user}</strong> {log.action} <span className="target">{log.target}</span></p>
-                <small className="timestamp">{log.timestamp}</small>
+                <p>
+                  <strong>{log.user}</strong> {log.action} 
+                  <span className="target"> {log.target}</span>
+                </p>
+
+                <small className="timestamp">
+                  {log.timestamp}
+                </small>
               </div>
             </div>
           ))}
         </div>
-      </div>
 
+      </div>
     </div>
   );
 }

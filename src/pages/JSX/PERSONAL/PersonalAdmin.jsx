@@ -1,19 +1,16 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../assets/logo.png";
 import { UserPlus, UserMinus, Edit3 } from "lucide-react";
 import "../../CSS/personal.css";
-import AddPersonalModal from "./AgregarPersonal";
+import api from "../../../api/axios";
+import AgregarPersonal from "./AgregarPersonal";
 
 function Personal() {
   const [sidebarActive, setSidebarActive] = useState(false);
   const toggleSidebar = () => setSidebarActive(!sidebarActive);
 
-  const [users, setUsers] = useState([
-    { id: 1, nombre: "Juan", apellido: "Pérez", correo: "juan.perez@email.com", rol: "admin", activo: true, contraseña: "password123" },
-    { id: 2, nombre: "María", apellido: "García", correo: "maria.garcia@email.com", rol: "colaborador", activo: true, contraseña: "password456" },
-    { id: 3, nombre: "Carlos", apellido: "Rodríguez", correo: "carlos.rodriguez@email.com", rol: "colaborador", activo: false, contraseña: "password789" }
-  ]);
+  const [users, setUsers] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
@@ -25,11 +22,44 @@ function Personal() {
     activo: true,
     contraseña: "",
   });
+
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Cargar usuarios del backend
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const res = await api.get("/users/list");
+
+      const mappedUsers = res.data.map(user => {
+        const [nombre, ...rest] = user.name.split(" ");
+        const apellido = rest.join(" ");
+
+        return {
+          id: user.id,
+          nombre: nombre,
+          apellido: apellido || "",
+          correo: user.email,
+          rol: user.role,
+          activo: user.active,
+          contraseña: ""
+        };
+      });
+
+      setUsers(mappedUsers);
+    } catch (error) {
+      console.error("Error al cargar usuarios:", error);
+    }
+  };
+
+  // Filtro de búsqueda
   const filteredUsers = useMemo(() => {
     if (!searchTerm.trim()) return users;
     const term = searchTerm.toLowerCase();
+
     return users.filter(user =>
       user.nombre.toLowerCase().includes(term) ||
       user.apellido.toLowerCase().includes(term) ||
@@ -46,35 +76,63 @@ function Personal() {
     setShowModal(true);
   };
 
-  const handleDelete = (userId) => {
-    setUsers(users.filter(u => u.id !== userId));
+  // Eliminar usuario
+  const handleDelete = async (userId) => {
+    try {
+      await api.delete(`/users/delete/${userId}`);
+      setUsers(users.filter(u => u.id !== userId));
+    } catch (error) {
+      console.error("Error al eliminar usuario:", error);
+    }
   };
 
-  const handleFormSubmit = (e) => {
+  // Crear / Editar usuario
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (editingUser) {
-      setUsers(users.map(u => u.id === editingUser.id ? { ...formData, id: editingUser.id } : u));
-    } else {
-      const nextId = users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1;
-      setUsers([...users, { ...formData, id: nextId }]);
-    }
-    setShowModal(false);
-    setEditingUser(null);
 
-    setFormData({
-      nombre: "",
-      apellido: "",
-      correo: "",
-      rol: "colaborador",
-      activo: true,
-      contraseña: ""
-    });
+    try {
+      const fullName = `${formData.nombre} ${formData.apellido}`;
+
+      if (editingUser) {
+        // EDITAR
+        await api.put(`/users/update/${editingUser.id}`, {
+          name: fullName,
+          email: formData.correo,
+          role: formData.rol,
+          active: formData.activo
+        });
+      } else {
+        // CREAR
+        await api.post("/users/register", {
+          name: fullName,
+          email: formData.correo,
+          password: formData.contraseña,
+          role: formData.rol
+        });
+      }
+
+      await fetchUsers();
+      setShowModal(false);
+      setEditingUser(null);
+
+      setFormData({
+        nombre: "",
+        apellido: "",
+        correo: "",
+        rol: "colaborador",
+        activo: true,
+        contraseña: ""
+      });
+
+    } catch (error) {
+      console.error("Error guardando usuario:", error);
+    }
   };
 
   return (
     <div id="personal">
 
-      {/* Sidebar button */}
+      {/* Sidebar Button */}
       <button className={`open-btn ${sidebarActive ? "hide-btn" : ""}`} onClick={toggleSidebar}>
         ☰ Abrir Menú
       </button>
@@ -106,6 +164,7 @@ function Personal() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+
             <button onClick={() => setShowModal(true)}>
               <UserPlus /> Agregar Personal
             </button>
@@ -124,7 +183,12 @@ function Personal() {
             </thead>
 
             <tbody>
-              {filteredUsers.length === 0 && <tr><td colSpan="6">No se encontraron usuarios</td></tr>}
+              {filteredUsers.length === 0 && (
+                <tr>
+                  <td colSpan="6">No se encontraron usuarios</td>
+                </tr>
+              )}
+
               {filteredUsers.map(user => (
                 <tr key={user.id}>
                   <td>{user.id}</td>
@@ -136,8 +200,13 @@ function Personal() {
                   </td>
 
                   <td className="actions">
-                    <button onClick={() => handleEdit(user)} title="Editar"><Edit3 /></button>
-                    <button onClick={() => handleDelete(user.id)} title="Eliminar"><UserMinus /></button>
+                    <button onClick={() => handleEdit(user)} title="Editar">
+                      <Edit3 />
+                    </button>
+
+                    <button onClick={() => handleDelete(user.id)} title="Eliminar">
+                      <UserMinus />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -145,7 +214,7 @@ function Personal() {
           </table>
         </div>
 
-        <AddPersonalModal
+        <AgregarPersonal
           showModal={showModal}
           setShowModal={setShowModal}
           formData={formData}

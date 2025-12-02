@@ -2,15 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import "../../CSS/camaras-admin.css";
 import logo from "../../../assets/logo.png";
 import { Link } from "react-router-dom";
-import { Camera, Wifi, WifiOff, AlertCircle} from 'lucide-react';
-
+import { Camera, Wifi, WifiOff, AlertCircle } from 'lucide-react';
 
 function Camaras() {
   const [sidebarActive, setSidebarActive] = useState(false);
   const videoRef = useRef(null);
   const sidebarRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filterArea, setFilterArea] = useState(null); // área seleccionada para filtrar
+  const [filterArea, setFilterArea] = useState(null);
+  const [cameras, setCameras] = useState([]);
 
   const toggleSidebar = () => {
     setSidebarActive(!sidebarActive);
@@ -34,17 +34,32 @@ function Camaras() {
     };
   }, [sidebarActive]);
 
-  // Datos de cámaras con campo “area”
-  const [cameras] = useState([
-    { id: 1, name: 'Cámara Entrada', ip: '192.168.1.10', area: 'Entrada', status: 'connected', lastSeen: '2 min' },
-    { id: 2, name: 'Cámara Estacionamiento', ip: '192.168.1.11', area: 'Exterior', status: 'disconnected', lastSeen: '15 min' },
-    { id: 3, name: 'Cámara Recepción', ip: '192.168.1.12', area: 'Interior', status: 'connected', lastSeen: '1 min' },
-  ]);
+  // Obtener cámaras desde backend
+  useEffect(() => {
+    const fetchCameras = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/cameras/get-all");
+        const data = await response.json();
 
-  const connectedCameras = cameras.filter(cam => cam.status === 'connected').length;
-  const disconnectedCameras = cameras.filter(cam => cam.status === 'disconnected').length;
+        const formatted = data.map(cam => ({
+          id: cam.id,
+          name: cam.name,
+          ip: cam.ip,
+          area: cam.area,
+          status: cam.status,
+          lastSeen: cam.last_seen
+        }));
 
-  // Stream de la primera cámara (solo ejemplo)
+        setCameras(formatted);
+      } catch (error) {
+        console.error("Error cargando cámaras:", error);
+      }
+    };
+
+    fetchCameras();
+  }, []);
+
+  // 
   useEffect(() => {
     navigator.mediaDevices.getUserMedia({
       video: { width: 640, height: 360 }
@@ -63,17 +78,16 @@ function Camaras() {
     });
   }, []);
 
- 
-  
+  const connectedCameras = cameras.filter(cam => cam.status === 'connected').length;
+  const disconnectedCameras = cameras.filter(cam => cam.status === 'disconnected').length;
 
-  // Filtrado por buscador + área
+  // Filtrado
   const filteredCameras = cameras.filter(cam => {
     const matchesSearch = cam.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesArea = filterArea ? cam.area === filterArea : true;
     return matchesSearch && matchesArea;
   });
 
-  // Obtener lista de áreas únicas para mostrar en “Ver Áreas”
   const uniqueAreas = Array.from(new Set(cameras.map(cam => cam.area)));
 
   return (
@@ -95,8 +109,6 @@ function Camaras() {
         </nav>
       </div>
 
-      
-
       <div className="main-content">
         <div className="header-info">
           <div className="header-texts">
@@ -105,7 +117,6 @@ function Camaras() {
           </div>
 
           <div className="camera-controls">
-            
             <select
               className="area-select"
               value={filterArea || ""}
@@ -184,11 +195,10 @@ function Camaras() {
                 ) : (
                   <WifiOff className="icon camera-status-icon disconnected-icon" />
                 )}
-                
               </div>
 
               <div className="camera-stream-box">
-                {index === 0 ? (
+                {index === 0 && camera.status === "connected" ? (
                   <video
                     ref={videoRef}
                     className="live-video"

@@ -1,47 +1,87 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Clock, Download } from 'lucide-react';
+import { MapPin, Clock, Download, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import logo from "../../../assets/logo.png";
 import "../../CSS/Reportes.css";
+import api from "../../../api/axios";  // <--- IMPORTANTE
 
-const Reportes = () => {
+const Reportes= () => {
   const [sidebarActive, setSidebarActive] = useState(false);
   const sidebarRef = useRef(null);
 
-  const [reports, setReports] = useState([
-    { id: 1, title: "Robo a mano armada", violenceLevel: 85, urgency: "ALTA", status: "ESPERANDO", date: "2024-01-15", time: "14:30", location: "Centro Comercial Plaza Mayor", description: "Sujeto armado con pistola robó $5000 de una tienda de electrónicos." },
-    { id: 2, title: "Riña en bar", violenceLevel: 45, urgency: "MEDIA", status: "RESUELTO", date: "2024-01-15", time: "22:15", location: "Bar La Noche, Zona Rosa", description: "Discusión entre clientes escaló a pelea física, intervención policial." },
-    { id: 3, title: "Asalto callejero", violenceLevel: 70, urgency: "ALTA", status: "ESPERANDO", date: "2024-01-15", time: "08:45", location: "Calle Principal #123", description: "Dos sujetos asaltaron a transeúnte, robaron celular y cartera." },
-    { id: 4, title: "Robo con arma blanca", violenceLevel: 60, urgency: "MEDIA", status: "ENPROCESO", date: "2024-01-14", time: "19:20", location: "Parque Central", description: "Individuo con cuchillo amenazó a pareja, robó pertenencias." },
-    { id: 5, title: "Pelea familiar", violenceLevel: 30, urgency: "BAJA", status: "RESUELTO", date: "2024-01-14", time: "16:00", location: "Residencial Las Palmas", description: "Discusión entre familiares, mediación policial exitosa." }
-  ]);
+  const [reports, setReports] = useState([]);
+  const [filteredReports, setFilteredReports] = useState([]);
 
-  const [filteredReports, setFilteredReports] = useState(reports);
   const [activeFilter, setActiveFilter] = useState({
     urgency: "TODAS",
     status: "TODOS",
   });
 
-  // 🔹 FUNCIÓN PARA AGREGAR NUEVOS REPORTES CON ID AUTOMÁTICO
-  const addReport = (newReport) => {
-    const nextId = reports.length > 0 ? Math.max(...reports.map(r => r.id)) + 1 : 1;
-    const reportWithId = { ...newReport, id: nextId };
-    const updated = [...reports, reportWithId];
-    setReports(updated);
-    setFilteredReports(updated);
+  useEffect(() => {
+    cargarReportes();
+  }, []);
+
+  const cargarReportes = async () => {
+    try {
+      const response = await api.get("/reports/get-all");
+
+      const formateados = response.data.map(report => {
+        const fecha = report.created_at 
+          ? new Date(report.created_at) 
+          : new Date();
+
+        return {
+          id: report.id,
+          title: report.title,
+          violenceLevel: report.violence_level,
+          urgency: report.urgency,
+          status: report.status,
+          date: fecha.toISOString().split("T")[0],
+          time: fecha.toTimeString().slice(0, 5),
+          location: report.location,
+          description: report.description,
+          camera_id: report.camera_id
+        };
+      });
+
+      setReports(formateados);
+      setFilteredReports(formateados);
+
+    } catch (error) {
+      console.error("Error cargando reportes:", error);
+    }
   };
 
-  const updateStatus = (id, newStatus) => {
-    const updated = reports.map(r =>
-      r.id === id ? { ...r, status: newStatus } : r
-    );
-    setReports(updated);
+  const updateStatus = async (id, newStatus) => {
+    try {
+      await api.put(`/reports/update/${id}/status`, {
+        newStatus: newStatus
+      });
 
-    let filtered = updated;
-    if (activeFilter.urgency !== "TODAS")
-      filtered = filtered.filter(r => r.urgency === activeFilter.urgency);
-    if (activeFilter.status !== "TODOS")
-      filtered = filtered.filter(r => r.status === activeFilter.status);
+      const updated = reports.map(r =>
+        r.id === id ? { ...r, status: newStatus } : r
+      );
+
+      setReports(updated);
+      aplicarFiltros(updated, activeFilter);
+
+    } catch (error) {
+      console.error("Error actualizando estado:", error);
+      alert("Error al actualizar el estado");
+    }
+  };
+
+
+  const aplicarFiltros = (lista, filtros) => {
+    let filtered = lista;
+
+    if (filtros.urgency !== "TODAS") {
+      filtered = filtered.filter(r => r.urgency === filtros.urgency);
+    }
+
+    if (filtros.status !== "TODOS") {
+      filtered = filtered.filter(r => r.status === filtros.status);
+    }
 
     setFilteredReports(filtered);
   };
@@ -51,7 +91,10 @@ const Reportes = () => {
       if (sidebarRef.current && !sidebarRef.current.contains(event.target))
         setSidebarActive(false);
     };
-    if (sidebarActive) document.addEventListener('mousedown', handleClickOutside);
+
+    if (sidebarActive)
+      document.addEventListener('mousedown', handleClickOutside);
+
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [sidebarActive]);
 
@@ -77,7 +120,9 @@ const Reportes = () => {
     level >= 70 ? 'violence-alta' : level >= 40 ? 'violence-media' : 'violence-baja';
 
   const totalIncidents = reports.length;
-  const averageViolence = Math.round(reports.reduce((acc, r) => acc + r.violenceLevel, 0) / totalIncidents);
+  const averageViolence = totalIncidents > 0
+    ? Math.round(reports.reduce((acc, r) => acc + r.violenceLevel, 0) / totalIncidents)
+    : 0;
 
   const hourRanges = ["00-06", "06-12", "12-18", "18-24"];
   const incidentsByHour = hourRanges.map(range => {
@@ -88,25 +133,35 @@ const Reportes = () => {
     }).length;
     return { range, count };
   });
+
   const maxHourCount = Math.max(...incidentsByHour.map(i => i.count), 1);
 
   const locations = [...new Set(filteredReports.map(r => r.location))];
+
   const incidentsByLocation = locations.map(loc => {
     const count = filteredReports.filter(r => r.location === loc).length;
     return { location: loc, count };
   });
+
   const maxLocationCount = Math.max(...incidentsByLocation.map(i => i.count), 1);
 
   return (
     <div className="reportes-container" id="reportes">
-      <button className={`open-btn ${sidebarActive ? "hide-btn" : ""}`} onClick={() => setSidebarActive(!sidebarActive)}>☰ Abrir Menú</button>
+
+      <button 
+        className={`open-btn ${sidebarActive ? "hide-btn" : ""}`} 
+        onClick={() => setSidebarActive(!sidebarActive)}>
+        ☰ Abrir Menú
+      </button>
+
       <div ref={sidebarRef} className={`sidebar ${sidebarActive ? "active" : ""}`}>
         <img src={logo} alt="Logo Sidebar" className="logo" />
         <Link to="/colaborador">Inicio</Link>
         <Link to="/camaras">Cámaras</Link>
-        <Link to="/auditoriables">Auditoriables</Link>
+        <Link to="/auditoriables">Auditoriable</Link>
         <Link to="/">Salir de sesión</Link>
       </div>
+
       {sidebarActive && <div className="overlay" onClick={() => setSidebarActive(false)} />}
 
       <div className="main-content">
@@ -114,8 +169,8 @@ const Reportes = () => {
           <div className="grid-layout">
 
             <div className="report-panel">
-            
-              {/* === FILTROS === */}
+
+              {/* FILTROS */}
               <div className="filters-section">
                 <div className="filter-group">
                   <label>Filtrar por Urgencia:</label>
@@ -123,17 +178,12 @@ const Reportes = () => {
                     className="status-select"
                     value={activeFilter.urgency}
                     onChange={(e) => {
-                      const urgency = e.target.value;
-                      const status = activeFilter.status;
-                      setActiveFilter({ urgency, status });
-
-                      let filtered = reports;
-                      if (urgency !== "TODAS")
-                        filtered = filtered.filter((r) => r.urgency === urgency);
-                      if (status !== "TODOS")
-                        filtered = filtered.filter((r) => r.status === status);
-
-                      setFilteredReports(filtered);
+                      const newFilters = {
+                        ...activeFilter,
+                        urgency: e.target.value
+                      };
+                      setActiveFilter(newFilters);
+                      aplicarFiltros(reports, newFilters);
                     }}
                   >
                     <option value="TODAS">Todas</option>
@@ -149,17 +199,12 @@ const Reportes = () => {
                     className="status-select"
                     value={activeFilter.status}
                     onChange={(e) => {
-                      const status = e.target.value;
-                      const urgency = activeFilter.urgency;
-                      setActiveFilter({ urgency, status });
-
-                      let filtered = reports;
-                      if (urgency !== "TODAS")
-                        filtered = filtered.filter((r) => r.urgency === urgency);
-                      if (status !== "TODOS")
-                        filtered = filtered.filter((r) => r.status === status);
-
-                      setFilteredReports(filtered);
+                      const newFilters = {
+                        ...activeFilter,
+                        status: e.target.value
+                      };
+                      setActiveFilter(newFilters);
+                      aplicarFiltros(reports, newFilters);
                     }}
                   >
                     <option value="TODOS">Todos</option>
@@ -171,14 +216,16 @@ const Reportes = () => {
                 </div>
               </div>
 
-              {/* === LISTA DE REPORTES === */}
+              {/* LISTA DE REPORTES */}
               <div className="report-list">
                 <h2>Panel de Reportes</h2>
+
                 <div className="report-items">
                   {filteredReports.map(report => (
                     <div key={report.id} className="report-item">
+
                       <div className="report-header">
-                        <h3>#{report.id} - {report.title}</h3>
+                        <h3>{`#${report.id} - ${report.title}`}</h3>
 
                         <div className="report-actions">
                           <button disabled title="Descargar PDF"><Download size={16} /></button>
@@ -193,6 +240,7 @@ const Reportes = () => {
                             <option value="INCONCLUSO">Inconcluso</option>
                             <option value="RESUELTO">Resuelto</option>
                           </select>
+
                         </div>
                       </div>
 
@@ -221,8 +269,14 @@ const Reportes = () => {
                       </div>
 
                       <div className="report-info-grid">
-                        <div className="date-time"><Clock size={16} /><span>{report.date} • {report.time}</span></div>
-                        <div className="location-info"><MapPin size={16} /><span>{report.location}</span></div>
+                        <div className="date-time">
+                          <Clock size={16} />
+                          <span>{report.date} • {report.time}</span>
+                        </div>
+                        <div className="location-info">
+                          <MapPin size={16} />
+                          <span>{report.location}</span>
+                        </div>
                       </div>
 
                       <div className="report-description">
@@ -231,13 +285,14 @@ const Reportes = () => {
                       </div>
 
                       <button className="btn-view-details">Ver Detalles</button>
+
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* === PANEL DE ESTADÍSTICAS === */}
+            {/* PANEL ESTADÍSTICAS */}
             <div className="stats-panel">
               <div className="stats-box">
                 <div className="stats-header">
@@ -259,14 +314,14 @@ const Reportes = () => {
                 <div className="by-hour">
                   <h4>Incidentes por Hora</h4>
                   <div className="list-scrollable">
-                    {hourRanges.map((item, i) => (
+                    {incidentsByHour.map((item, i) => (
                       <div key={i} className="list-item">
                         <div className="list-item-header">
-                          <span>{incidentsByHour[i].range} hrs</span>
-                          <span>{incidentsByHour[i].count}</span>
+                          <span>{item.range} hrs</span>
+                          <span>{item.count}</span>
                         </div>
                         <div className="bar-bg">
-                          <div className="bar-fill" style={{ width: `${(incidentsByHour[i].count / maxHourCount) * 100}%` }}></div>
+                          <div className="bar-fill" style={{ width: `${(item.count / maxHourCount) * 100}%` }}></div>
                         </div>
                       </div>
                     ))}

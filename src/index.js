@@ -20,48 +20,48 @@ import AuditoriableAdmin from "./pages/JSX/REGISTROS/AuditoriableAdmin";
 const router = createBrowserRouter([
 
   {
+    path: '/super-admin',
+    element: <SuperAdmin />,
+  },
+  {
     path: '/auditoriables-admin',
     element: <AuditoriableAdmin/>,
   },
   {
-    path: '/auditoriables',
-    element: <Auditoriable/>,
-  },
-   {
-    path: '/camara-admin',
-    element: <CamaraAdmin />,
-  },
-   {
-    path: '/permisos',
-    element: <Permisos />,
-  },
-   {
-    path: '/personal',
-    element: <PersonalAdmin />,
-  },
-   {
-    path: '/reportes-admin',
-    element: <ReportesAdmin/>,
-  },
-   {
-    path: '/reportes',
-    element: <Reportes />,
-  },
+   path: '/reportes-admin',
+   element: <ReportesAdmin/>,
+ },
+ {
+  path: '/camara-admin',
+  element: <CamaraAdmin />,
+},
+{
+ path: '/personal',
+ element: <PersonalAdmin />,
+},
+{
+ path: '/permisos',
+ element: <Permisos />,
+},
+{
+ path: '/validar',
+ element: <Validar />,
+},
+{
+  path: '/auditoriables',
+  element: <Auditoriable/>,
+},
+{
+ path: '/colaborador',
+ element: <Colaborador />,
+},
+  {
+   path: '/reportes',
+   element: <Reportes />,
+ },
  {
     path: '/camaras',
     element: <Camaras />,
-  },
-  {
-    path: '/super-admin',
-    element: <SuperAdmin />,
-  },
-   {
-    path: '/colaborador',
-    element: <Colaborador />,
-  },
-  {
-    path: '/validar',
-    element: <Validar />,
   },
     {
     path: '/',

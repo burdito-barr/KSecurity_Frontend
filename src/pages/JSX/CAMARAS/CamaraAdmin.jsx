@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import "../../CSS/camaras-admin.css";
 import logo from "../../../assets/logo.png";
 import { Link } from "react-router-dom";
-import { Camera, Wifi, WifiOff, AlertCircle, Plus, Trash2 } from 'lucide-react';
+import { AlertCircle, Plus, Trash2 } from 'lucide-react';
 import AgregarCamara from "./AgregarCamara";
+import api from "../../../api/axios";
 
 function CamaraAdmin() {
   const [sidebarActive, setSidebarActive] = useState(false);
@@ -17,6 +18,7 @@ function CamaraAdmin() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterArea, setFilterArea] = useState(null);
+  const [cameras, setCameras] = useState([]);
 
   const toggleSidebar = () => setSidebarActive(!sidebarActive);
 
@@ -26,15 +28,23 @@ function CamaraAdmin() {
         setSidebarActive(false);
       }
     };
+
     if (sidebarActive) document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [sidebarActive]);
 
-  const [cameras, setCameras] = useState([
-    { id: 1, name: 'Cámara Entrada', ip: '192.168.1.10', area: 'Entrada', status: 'connected', lastSeen: '2 min' },
-    { id: 2, name: 'Cámara Estacionamiento', ip: '192.168.1.11', area: 'Exterior', status: 'disconnected', lastSeen: '15 min' },
-    { id: 3, name: 'Cámara Recepción', ip: '192.168.1.12', area: 'Interior', status: 'connected', lastSeen: '1 min' },
-  ]);
+  useEffect(() => {
+    obtenerCamaras();
+  }, []);
+
+  const obtenerCamaras = async () => {
+    try {
+      const response = await api.get("/cameras/get-all");
+      setCameras(response.data);
+    } catch (error) {
+      console.error("Error al obtener cámaras:", error);
+    }
+  };
 
   const connectedCameras = cameras.filter(cam => cam.status === 'connected').length;
   const disconnectedCameras = cameras.filter(cam => cam.status === 'disconnected').length;
@@ -53,32 +63,44 @@ function CamaraAdmin() {
     .catch(err => console.error("Error accediendo a la cámara:", err));
   }, []);
 
-  const saveCamera = () => {
+  const saveCamera = async () => {
     if (!newCameraName.trim() || !newCameraIP.trim() || !newCameraArea.trim()) {
       alert("Por favor, completa todos los campos");
       return;
     }
 
     const newCamera = {
-      id: cameras.length + 1,
       name: newCameraName,
       ip: newCameraIP,
       area: newCameraArea,
-      status: Math.random() > 0.5 ? 'connected' : 'disconnected',
-      lastSeen: '1 min'
+      status: "connected"
     };
 
-    setCameras([...cameras, newCamera]);
+    try {
+      await api.post("/cameras/create", newCamera);
+      obtenerCamaras();
 
-    setNewCameraName("");
-    setNewCameraIP("");
-    setNewCameraArea("");
-    setShowModal(false);
+      setNewCameraName("");
+      setNewCameraIP("");
+      setNewCameraArea("");
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error creando cámara:", error);
+      alert("No se pudo crear la cámara");
+    }
   };
 
-  const removeCamera = (id) => {
-    if (cameras.length <= 1) return alert('No se puede eliminar la última cámara');
-    setCameras(cameras.filter(cam => cam.id !== id));
+  const removeCamera = async (id) => {
+    if (cameras.length <= 1) {
+      return alert("No se puede eliminar la última cámara");
+    }
+
+    try {
+      await api.delete(`/cameras/delete/${id}`);
+      obtenerCamaras();
+    } catch (error) {
+      console.error("Error eliminando cámara:", error);
+    }
   };
 
   const filteredCameras = cameras.filter(cam => {
@@ -125,15 +147,13 @@ function CamaraAdmin() {
       </div>
 
       <div className="main-content">
+
         <div className="header-info">
           <img src={logo} alt="Logo Central" className="logo-central" />
           <h1 className="title">Panel de Vigilancia</h1>
 
           <div className="camera-controls">
-            <button 
-              onClick={() => setShowModal(true)}
-              className="btn-add-camera"
-            >
+            <button onClick={() => setShowModal(true)} className="btn-add-camera">
               <Plus size={18} /> Agregar Cámara
             </button>
 
@@ -161,65 +181,35 @@ function CamaraAdmin() {
         </div>
 
         <div className="stats-cards">
-          <div className="card connected-card">
-            <div className="card-inner">
-              <div>
-                <p className="card-label">Cámaras Conectadas</p>
-                <p className="card-number">{connectedCameras}</p>
-              </div>
-              <div className="icon-circle connected-icon-bg">
-                <Wifi className="icon card-icon" />
-              </div>
-            </div>
+          <div className="card">
+            <p>Cámaras Conectadas</p>
+            <h2>{connectedCameras}</h2>
           </div>
 
-          <div className="card disconnected-card">
-            <div className="card-inner">
-              <div>
-                <p className="card-label">Cámaras Desconectadas</p>
-                <p className="card-number">{disconnectedCameras}</p>
-              </div>
-              <div className="icon-circle disconnected-icon-bg">
-                <WifiOff className="icon card-icon" />
-              </div>
-            </div>
+          <div className="card">
+            <p>Cámaras Desconectadas</p>
+            <h2>{disconnectedCameras}</h2>
           </div>
 
-          <div className="card total-card">
-            <div className="card-inner">
-              <div>
-                <p className="card-label">Total de Cámaras</p>
-                <p className="card-number">{cameras.length}</p>
-              </div>
-              <div className="icon-circle total-icon-bg">
-                <Camera className="icon card-icon" />
-              </div>
-            </div>
+          <div className="card">
+            <p>Total de Cámaras</p>
+            <h2>{cameras.length}</h2>
           </div>
         </div>
 
         <div className="camera-grid">
           {filteredCameras.map((camera, index) => (
-            <div
-              key={camera.id}
-              className={`camera-card ${
-                camera.status === 'connected' ? 'camera-connected' : 'camera-disconnected'
-              }`}
-            >
+            <div key={camera.id} className={`camera-card ${camera.status}`}>
+              
               <div className="camera-card-header">
                 <div className="camera-title-flex">
-                  <div className={`status-dot ${camera.status === 'connected' ? 'dot-connected' : 'dot-disconnected'}`}></div>
-                  <h3 className="camera-name">{camera.name}</h3>
+                  <span className={`status-dot ${camera.status === "connected" ? "dot-connected" : "dot-disconnected"}`}></span>
+                  <h3>{camera.name}</h3>
                 </div>
-                {camera.status === 'connected' ? (
-                  <Wifi className="icon camera-status-icon connected-icon" />
-                ) : (
-                  <WifiOff className="icon camera-status-icon disconnected-icon" />
-                )}
-                <button 
+
+                <button
                   onClick={() => removeCamera(camera.id)}
                   className="btn-remove-individual"
-                  disabled={cameras.length <= 1}
                 >
                   <Trash2 size={16} />
                 </button>
@@ -227,36 +217,23 @@ function CamaraAdmin() {
 
               <div className="camera-stream-box">
                 {index === 0 ? (
-                  <video
-                    ref={videoRef}
-                    className="live-video"
-                    autoPlay
-                    muted
-                    playsInline
-                  ></video>
+                  <video ref={videoRef} autoPlay muted playsInline className="live-video"/>
                 ) : (
                   <div className="no-stream">
-                    <AlertCircle className="icon alert-icon" />
-                    <p className="stream-text">Inactiva</p>
+                    <AlertCircle className="alert-icon" />
+                    <p>Inactiva</p>
                   </div>
                 )}
               </div>
 
               <div className="camera-footer">
-                <span className="footer-label">IP:</span>
-                <span className="footer-value">{camera.ip}</span>
-                <br />
-                <span className="footer-label">Área:</span>
-                <span className="footer-value">{camera.area}</span>
-                <br />
-                <span className="footer-label">Última conexión:</span>
-                <span className="footer-value">
-                  {camera.status === 'connected' ? 'Ahora' : camera.lastSeen}
-                </span>
+                <p><span className="footer-label">IP:</span> <span className="footer-value">{camera.ip}</span></p>
+                <p><span className="footer-label">Área:</span> <span className="footer-value">{camera.area}</span></p>
               </div>
             </div>
           ))}
         </div>
+
       </div>
     </div>
   );
